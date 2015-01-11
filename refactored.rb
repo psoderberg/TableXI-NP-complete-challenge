@@ -1,4 +1,4 @@
-target =  25#21.8 #30.10 #15.05
+target =  39#21.8 #30.10 #15.05
 FoodItem = Struct.new(:name, :price)
 menu = [
 FoodItem.new("mixed fruit", 2.15),
@@ -107,7 +107,21 @@ def calculate_order(menu, target)
               if order
                 order.list_names
               else
-                p "Hi"
+                seventh_array = Array.new
+                sixth_arr.each do |solution|
+                  menu.each do |fooditem|
+                  seventh_array << PotentialSet.new([solution.items, fooditem].flatten)
+                  end
+                end
+                if seventh_array.all_solutions_greater_than_target(target)
+                  puts "No Solution"
+                end
+                order = seventh_array.check_solutions(target)
+                if order
+                  order.list_names
+                else
+                  p "Hi"
+                end
               end
             end
           end
@@ -116,8 +130,6 @@ def calculate_order(menu, target)
     end
   end
 end
-
-
 end
 
 calculate_order(menu, target)
