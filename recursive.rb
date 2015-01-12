@@ -1,10 +1,32 @@
+require 'csv'
+
+#CSV Format:
+#"$Target_Price"
+#Food1, "$Price1"
+#Food2, "$Price2"
+
+def parse_csv_file
+  file = ARGV[0]
+  @menu = []
+  csv_contents = CSV.read(file)
+  p @target = csv_contents[0][0][1..-1].to_f
+  temp_menu = csv_contents[1..-1]
+  temp_menu.each do |item|
+    item[1] = item[1][1..-1].to_f
+  end
+  temp_menu.each do |fooditem|
+    @menu << FoodItem.new(fooditem[0], fooditem[1])
+  end
+end
+
+
 class Array
   def check_solutions(target)
     self.find {|solution| solution.total_price == target }
   end
 end
 
-target =  40.1 #21.8 #30.10 #15.05
+target =  35.1 #21.8 #30.10 #15.05
 FoodItem = Struct.new(:name, :price)
 menu = [
 FoodItem.new("mixed fruit", 2.15),
@@ -38,6 +60,7 @@ end
 def load_menu(menu, target)
   sorted = menu.sort_by {|fooditem| fooditem.price}
   @lowest_price = sorted[0].price
+  @highest_price = sorted.last.price
   @menu_items = []
   menu.each do |fooditem|
     @menu_items << PotentialSet.new([fooditem])
@@ -69,7 +92,7 @@ def find_order(menu, target, poss_solutions = @menu_items)
   find_order(menu, target, refined_solutions[0])
 end
 
-load_menu(menu, target)
-p find_order(menu, target)
-# p @menu_items.all_solutions_greater_than_target(target)
+parse_csv_file
+load_menu(@menu, @target)
+p find_order(@menu, @target)
 
